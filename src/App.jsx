@@ -10,6 +10,8 @@ const App = () => {
     return localStorage.getItem('darkMode') === 'true';
   });
 
+  const [csvContent, setCsvContent] = useState("");
+
   React.useEffect(() => {
     document.documentElement.setAttribute(
       'data-theme',
@@ -48,6 +50,56 @@ const App = () => {
     ];
     setStudents(demoStudents);
     localStorage.setItem('students', JSON.stringify(demoStudents));
+  };
+
+  const exportToCSV = () => {
+    if (!students || students.length === 0) {
+      alert("No students to export");
+      return;
+    }
+
+    const headers = ["Name", "Attendance", "Grade", "Notes"];
+
+    const rows = students.map((student) => [
+      student.name || "",
+      student.present ? 'Present' : 'Absent',
+      student.grade || "",
+      Array.isArray(student.notes) ? student.notes.join(" | ") : student.notes || ""
+    ]);
+
+    const csvContent = [
+      "\uFEFF", // UTF-8 BOM
+      headers.join(","),
+      ...rows.map((row) =>
+        row
+          .map((value) => `"${String(value).replace(/"/g, '""')}"`)
+          .join(",")
+      )
+    ].join("\n");
+
+    setCsvContent(csvContent);
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'students-export.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 5000);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(csvContent).then(() => {
+      alert('CSV content copied to clipboard');
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+    });
   };
 
   const totalStudents = students.length;
@@ -104,7 +156,17 @@ const App = () => {
         </tbody>
       </table>
 
-      <button onClick={generateRandomDemoClass}>Random demo class</button>
+      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
+        <button onClick={generateRandomDemoClass}>Random demo class</button>
+        <button onClick={exportToCSV} style={{ backgroundColor: '#38bdf8' }}>Export to CSV</button>
+      </div>
+
+      {csvContent && (
+        <>
+          <textarea value={csvContent} readOnly rows="10" cols="50" style={{ marginTop: '20px', width: '100%' }} />
+          <button onClick={copyToClipboard} style={{ backgroundColor: '#f472b6' }}>Copy CSV</button>
+        </>
+      )}
     </div>
   );
 };
