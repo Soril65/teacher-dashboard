@@ -1,0 +1,76 @@
+:root {
+  --background-color: #f4f4f9;
+  --text-color: #333;
+  --header-text-color: #333;
+  --button-background-color: #9E7FFF;
+  --border-color: #ddd;
+}
+
+[data-theme='dark'] {
+  --background-color: #202123;
+  --text-color: #ECECF1;
+  --header-text-color: #ECECF1;
+  --button-background-color: #38bdf8;
+  --border-color: #3A3B45;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  color: var(--header-text-color);
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: var(--button-background-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #8a65e3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  background-color: #3A3B45;
+}
+
+button.delete {
+  background-color: #ef4444;
+}
+
+button.delete:hover {
+  background-color: #cc3333;
+}
